@@ -1,3 +1,5 @@
+//ARQUIVO BASE PARA O SEGUNDO TRABALHO
+
 package arvorebinaria;
 
 import java.util.Comparator;

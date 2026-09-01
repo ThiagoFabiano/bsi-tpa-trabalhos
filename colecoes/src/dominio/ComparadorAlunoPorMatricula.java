@@ -1,3 +1,5 @@
+// ARQUIVO BASE DO PROFESSOR PARA SEGUIR DE EXEMPLO. EXCLUIR ANTES DA ENTREGA
+
 package dominio;
 
 import java.util.Comparator;

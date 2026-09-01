@@ -1,3 +1,5 @@
+// ARQUIVO BASE DO PROFESSOR, DESENVOLVER AQUI.
+
 package listaencadeada;
 
 import colecao.IColecao;
