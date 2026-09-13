@@ -20,7 +20,7 @@ public class GeradorArquivos {
         "Carvalho", "Lima", "Araujo", "Moreira", "Nunes", "Teixeira", "Cardoso"
     };
 
-    private static final int[] TAMANHOS_PADRAO = {100000, 200000, 400000, 800000};
+    private static final int[] TAMANHOS_PADRAO = {100000, 200000, 400000, 50000};
 
     private static final String PASTA_SAIDA = "entradas";
 

@@ -41,7 +41,7 @@ public class Main {
                     System.out.print("Lendo o arquivo 'entrada.txt'... ");
                     long inicioLeitura = System.nanoTime();
                     
-                    try (BufferedReader br = new BufferedReader(new FileReader("entradas/entrada_100000.txt"))) {
+                    try (BufferedReader br = new BufferedReader(new FileReader("entradas/entrada_50000.txt"))) {
                         String linha;
                         Contato novo = null;
                         while ((linha = br.readLine()) != null) {
