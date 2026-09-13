@@ -72,12 +72,70 @@ public class ListaEncadeada<T> implements IColecao<T> {
 
     @Override
     public T pesquisar(T valor) {
-        throw new UnsupportedOperationException("Unimplemented method 'pesquisar'");
+        if (valor == null || this.prim == null) {
+            return null;
+        }
+
+        No<T> atual = this.prim;
+
+        while (atual != null){
+            int comp = this.comparador.compare(atual.getValor(), valor);
+
+            // Elemento encontrado
+            if (comp == 0) {
+                return atual.getValor();
+            }
+
+            // Se a lista for ordenada e o elemento atual for maior que o procurado temos a certeza de que ele não está adiante.
+            if (this.ehOrdenada && comp > 0){
+                return null;
+            }
+
+            atual = atual.getProx();
+        }
+
+        return null;
+        
     }
 
     @Override
     public boolean remover(T valor) {
-        throw new UnsupportedOperationException("Unimplemented method 'remover'");
+        if (valor == null || this.prim == null){
+            return false;
+        }
+
+        No<T> ant = null;
+        No<T> atual = this.prim;
+
+        while (atual != null) {
+            int comp = this.comparador.compare(atual.getValor(), valor);
+
+            if(comp == 0){
+                // Caso 1: O elemento a ser removido é o primeiro da lista
+                if (ant == null){
+                    this.prim = atual.getProx();
+                    // Se a lista só tinha 1 elemento, o ult também deve virar null
+                    if (this.prim == null){
+                        this.ult = null;
+                    }
+                } else{
+                    // Caso 2: O elemento está no meio ou no fim
+                    ant.setProx(atual.getProx());
+                    // Se removeu o último, atualiza o ponteiro 'ult' para o anterior
+                    if (atual == this.ult){
+                        this.ult = ant;
+                    }
+                }
+                
+                this.quant--;
+                return true;
+            }
+
+            ant = atual;
+            atual = atual.getProx();
+        }
+        
+        return false;
     }
 
     @Override
