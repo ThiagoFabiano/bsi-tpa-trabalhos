@@ -12,8 +12,7 @@ public class Main {
         
         // Pergunta inicial conforme exigência do trabalho
         System.out.println("Deseja criar as listas ordenadas? (1 - Sim / 2 - Não)");
-        int opcaoOrdem = scanner.nextInt();
-        scanner.nextLine(); // limpa buffer
+        int opcaoOrdem = lerNumero(scanner);
         boolean ehOrdenada = (opcaoOrdem == 1);
 
         // Duas listas armazenadas em variáveis do tipo IColecao
@@ -21,6 +20,7 @@ public class Main {
         IColecao<Contato> listaTelefone = new ListaEncadeada<>(new ComparatorContatoPorTelefone(), ehOrdenada);
 
         int opcao = 0;
+        boolean arquivoCarregado = false;
 
         do {
             System.out.println("\n========== MENU ==========");
@@ -33,33 +33,36 @@ public class Main {
             System.out.println("7 - Sair");
             System.out.print("Escolha uma opcao: ");
             
-            opcao = scanner.nextInt();
-            scanner.nextLine(); // limpa buffer
+            opcao = lerNumero(scanner);
 
             switch (opcao) {
                 case 1:
+                    if (arquivoCarregado) {
+                        System.out.println("Os dados do arquivo já foram carregados!");
+                        break;
+                    }
+
                     System.out.print("Lendo o arquivo 'entrada.txt'... ");
                     long inicioLeitura = System.nanoTime();
-                    
+
                     try (BufferedReader br = new BufferedReader(new FileReader("entradas/entrada.txt"))) {
                         String linha;
-                        Contato novo = null;
                         while ((linha = br.readLine()) != null) {
                             // Assume formato CSV simples: Nome;Telefone
                             String[] partes = linha.split(";");
-                            if (partes.length == 2) {
-                                novo = new Contato(partes[0].trim(), partes[1].trim());
+                            if (partes.length == 2 && !partes[0].trim().isEmpty() && !partes[1].trim().isEmpty()) {
+                                Contato novo = new Contato(partes[0].trim(), partes[1].trim());
                                 listaNome.adicionar(novo);
                                 listaTelefone.adicionar(novo);
                             }
                         }
                         long fimLeitura = System.nanoTime();
+                        arquivoCarregado = true;
                         System.out.println("\nArquivo lido e listas montadas!");
                         System.out.println("Tempo gasto: " + (fimLeitura - inicioLeitura) + " ns");
 
                         System.out.println("Tamanho Lista Nome: " + listaNome.quantidadeNos());
                         System.out.println("Tamanho Lista Telefone: " + listaTelefone.quantidadeNos());
-                        System.out.println("Teste de formatação - Último telefone lido: '" + novo.getTelefone() + "'");
                     } catch (Exception e) {
                         System.out.println("\nErro ao ler o arquivo: " + e.getMessage());
                     }
@@ -67,12 +70,14 @@ public class Main {
 
                 case 2:
                     System.out.print("Digite o nome: ");
-                    String nome = scanner.nextLine();
+                    String nome = scanner.nextLine().trim();
                     System.out.print("Digite o telefone: ");
-                    String tel = scanner.nextLine();
-                    
+                    String tel = scanner.nextLine().trim();
+
                     Contato tempTel = new Contato("", tel);
-                    if (listaTelefone.pesquisar(tempTel) != null) {
+                    if (nome.isEmpty() || tel.isEmpty()) {
+                        System.out.println("Erro: Nome e telefone não podem ficar em branco!");
+                    } else if (listaTelefone.pesquisar(tempTel) != null) {
                         System.out.println("Erro: Já existe um contato com esse telefone!");
                     } else {
                         Contato novoContato = new Contato(nome, tel);
@@ -122,18 +127,13 @@ public class Main {
                     Contato dummyTel = new Contato("", telRemover);
                     
                     long inicioRemocao = System.nanoTime();
-                    // Pesquisamos primeiro para obter a referência completa do objeto (nome e telefone)
-                    Contato contatoRemover = listaTelefone.pesquisar(dummyTel);
-                    boolean removeu = false;
-                    
-                    if (contatoRemover != null) {
-                        // Removemos a MESMA referência de ambas as listas para manter consistência
-                        listaTelefone.remover(contatoRemover);
-                        listaNome.remover(contatoRemover);
-                        removeu = true;
-                    }
+                    boolean removeu = listaTelefone.remover(dummyTel);
                     long fimRemocao = System.nanoTime();
-                    
+
+                    if (removeu) {
+                        ((ListaEncadeada<Contato>) listaNome).remover(dummyTel, new ComparatorContatoPorTelefone());
+                    }
+
                     if (removeu) {
                         System.out.println("Contato excluído com sucesso.");
                     } else {
@@ -154,16 +154,23 @@ public class Main {
                         System.out.print("Novo telefone: ");
                         String novoTel = scanner.nextLine();
                         
-                        // Para alterar chaves em listas encadeadas ordenadas, devemos remover e readicionar 
-                        // caso contrário quebraríamos a estrutura de ordenação da lista
-                        listaNome.remover(achadoAlt);
-                        listaTelefone.remover(achadoAlt);
-                        
-                        Contato atualizado = new Contato(novoNome, novoTel);
-                        listaNome.adicionar(atualizado);
-                        listaTelefone.adicionar(atualizado);
-                        
-                        System.out.println("Dados alterados com sucesso!");
+                        Contato donoDoTelefone = listaTelefone.pesquisar(new Contato("", novoTel.trim()));
+
+                        if (novoNome.trim().isEmpty() || novoTel.trim().isEmpty()) {
+                            System.out.println("Erro: Nome e telefone não podem ficar em branco!");
+                        } else if (donoDoTelefone != null && donoDoTelefone != achadoAlt) {
+                            System.out.println("Erro: Já existe outro contato com esse telefone!");
+                        } else {
+                            Contato chaveAntiga = new Contato("", achadoAlt.getTelefone());
+                            listaTelefone.remover(chaveAntiga);
+                            ((ListaEncadeada<Contato>) listaNome).remover(chaveAntiga, new ComparatorContatoPorTelefone());
+
+                            Contato atualizado = new Contato(novoNome.trim(), novoTel.trim());
+                            listaNome.adicionar(atualizado);
+                            listaTelefone.adicionar(atualizado);
+
+                            System.out.println("Dados alterados com sucesso!");
+                        }
                     } else {
                         System.out.println("Contato não existe.");
                     }
@@ -179,7 +186,20 @@ public class Main {
                     System.out.println("Opção inválida!");
             }
         } while (opcao != 7);
-        
+
         scanner.close();
+    }
+
+    private static int lerNumero(Scanner scanner) {
+        while (!scanner.hasNextInt()) {
+            if (!scanner.hasNext()) {
+                return 7; 
+            }
+            scanner.next(); 
+            System.out.print("Digite um número: ");
+        }
+        int numero = scanner.nextInt();
+        scanner.nextLine(); 
+        return numero;
     }
 }

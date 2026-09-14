@@ -11,10 +11,6 @@ public class ListaEncadeada<T> implements IColecao<T> {
     private final Comparator<T> comparador;
     private final boolean ehOrdenada;
 
-    public ListaEncadeada() {
-        this(null, false);
-    }
-
     public ListaEncadeada(Comparator<T> comparador, boolean ehOrdenada) {
         this.prim = null;
         this.ult = null;
@@ -100,6 +96,12 @@ public class ListaEncadeada<T> implements IColecao<T> {
 
     @Override
     public boolean remover(T valor) {
+        return remover(valor, this.comparador);
+    }
+
+    // Remove usando outro criterio de comparacao. Serve para quem usa a lista
+    // poder achar o elemento exato quando a lista esta ordenada por outro campo.
+    public boolean remover(T valor, Comparator<T> criterio) {
         if (valor == null || this.prim == null){
             return false;
         }
@@ -108,7 +110,7 @@ public class ListaEncadeada<T> implements IColecao<T> {
         No<T> atual = this.prim;
 
         while (atual != null) {
-            int comp = this.comparador.compare(atual.getValor(), valor);
+            int comp = criterio.compare(atual.getValor(), valor);
 
             if(comp == 0){
                 // Caso 1: O elemento a ser removido é o primeiro da lista
