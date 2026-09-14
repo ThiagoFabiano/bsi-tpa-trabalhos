@@ -1,42 +1,29 @@
-# 📚 Disciplina: Técnicas de Programação Avançadas (2026)
+# Trabalho 1 - Análise de Complexidade em Estruturas de Listas
 
-Este repositório contém os exemplos de código utilizados em aula e nos trabalhos.
----
+## 📌 Sobre o Projeto
+Este projeto foi desenvolvido para a disciplina de Técnicas de Programação Avançadas. O objetivo foi implementar uma biblioteca própria de Lista Encadeada Genérica em Java (suportando listas ordenadas e não ordenadas) e realizar a análise matemática e empírica de complexidade de seus métodos. 
 
-## 📂 Organização do Repositório
+Para testar a biblioteca, foi construído um programa interativo que gerencia contatos telefônicos carregados a partir de um arquivo texto, permitindo inserções, buscas e remoções.
 
-Cada pasta representa um tópico ou projeto específico abordado durante o semestre:
+## 👥 Componentes do Grupo
+* Daniel Pinheiro
+* Kaio Henrique da Silva Nezio
+* Thiago Fabiano
 
-* **[listas-encadeadas](./listas-encadeadas):** Interface IColecao a ser implementada pela lista encadeada implementada no trabalho e exemplos de implemetação da lista e de um programa principal
+## 📂 Organização do Código
+O código-fonte está estruturado no diretório raiz e dividido nos seguintes pacotes lógicos:
 
----
+* **`colecao`**: Contém a interface `IColecao.java`, que define os contratos e métodos obrigatórios da estrutura de dados.
+* **`listaencadeada`**: É o núcleo da biblioteca. Contém as classes `ListaEncadeada.java` (implementação genérica) e `No.java` (nó da lista).
+* **`dominio`**: Contém as regras de negócio e a execução do programa. Inclui a classe `Contato.java`, os comparadores para ordenação (`ComparatorContatoPorNome.java` e `ComparatorContatoPorTelefone.java`) e a classe `Main.java`, que possui o menu interativo de testes.
 
-## 🛠️ Como rodar os exemplos no VS Code
+## ⚙️ Como Rodar o Projeto
 
-Para garantir que a IDE reconheça o projeto corretamente, siga estes passos:
+### Pré-requisitos
+* Java Development Kit (JDK) instalado.
+* Um arquivo chamado `entrada.txt` no diretório de execução do projeto. O arquivo deve conter os contatos no formato `Nome;Telefone`, um por linha.
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone [https://github.com/seu-usuario/nome-do-repo.git](https://github.com/seu-usuario/nome-do-repo.git)
-    ```
-2.  **Abra o VS Code.**
-3.  Vá em `File > Open Folder...` e selecione **a pasta específica do exercício** (ex: `listas-encadeadas`). 
-    > **Importante:** Não abra a pasta raiz da disciplina se quiser que o suporte ao Java (IntelliSense) funcione perfeitamente para cada projeto individual.
-4.  Certifique-se de ter o **Extension Pack for Java** da Microsoft instalado.
-5.  Abra o arquivo `Main.java` e clique em **Run** acima do método `main`.
-
----
-
-## 💻 Comandos Úteis (Terminal)
-
-Caso prefira rodar via terminal sem usar o botão "Run" da IDE:
-
-**Para compilar:**
-* No Linux: 
-javac src/*.java -d bin
-
-* No Windows (Powershell): 
-javac (Get-ChildItem -Recurse src/*.java) -d bin
-
-**Para executar:**
-java -cp bin dominio.Main
+### Executando via Terminal (Linha de Comando)
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/ThiagoFabiano/bsi-tpa-trabalhos.git](https://github.com/ThiagoFabiano/bsi-tpa-trabalhos.git)
