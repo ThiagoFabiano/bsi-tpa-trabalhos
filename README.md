@@ -11,12 +11,16 @@ Para testar a biblioteca, foi construído um programa interativo que gerencia co
 * Thiago Fabiano
 
 ## 📂 Organização do Código
-O código-fonte está em `colecoes/src`, dividido nos seguintes pacotes:
+O código-fonte está em `colecoes/src`, organizado no padrão MVC, com as bibliotecas de estruturas de dados em pacotes próprios:
 
-* **`colecao`**: Contém a interface `IColecao.java`, que define os métodos obrigatórios da estrutura de dados.
-* **`listaencadeada`**: É o núcleo da biblioteca. Contém as classes `ListaEncadeada.java` (implementação genérica) e `No.java` (nó da lista).
-* **`dominio`**: Contém as regras de negócio e a execução do programa. Inclui a classe `Contato.java`, os comparadores para ordenação (`ComparatorContatoPorNome.java` e `ComparatorContatoPorTelefone.java`) e a classe `Main.java`, que possui o menu interativo.
-* **`util`**: Contém o `GeradorArquivos.java`, usado para criar os arquivos de entrada dos testes de desempenho.
+* **`colecao`**: interface `IColecao.java`, que define os métodos obrigatórios das estruturas.
+* **`listaencadeada`**: biblioteca de lista encadeada genérica (`ListaEncadeada.java` e `No.java`).
+* **`model`**: classe `Contato.java` e os comparadores `ComparatorContatoPorNome.java` e `ComparatorContatoPorTelefone.java`.
+* **`view`**: `ContatoView.java`, responsável por toda a interação com o usuário no terminal (menus, leitura e mensagens).
+* **`controller`**: `ContatoController.java`, que recebe a opção escolhida na view, chama o service e manda a view exibir o resultado.
+* **`service`**: `ContatoService.java`, com as regras do programa (leitura do arquivo, telefone sem repetição, manter as duas coleções iguais) e a medição dos tempos; `Medicao.java` guarda o resultado de uma operação junto com o tempo gasto.
+* **`app`**: `Main.java`, que instancia as coleções escolhidas pelo usuário, o service e o controller.
+* **`util`**: `GeradorArquivos.java`, usado para criar os arquivos de entrada dos testes de desempenho.
 
 Os arquivos de entrada ficam em `colecoes/entradas`.
 
@@ -47,7 +51,20 @@ Linhas fora desse formato são ignoradas. Não pode haver dois contatos com o me
    cd bsi-tpa-trabalhos/colecoes
    ```
 
-3. Compile o projeto. O comando precisa pegar os arquivos de todos os pacotes, por isso muda de um sistema para o outro:
+3. Compile e execute com o `make` (precisa do `make` instalado; no Windows, use o Git Bash ou o WSL):
+   ```bash
+   make executar
+   ```
+
+   Outros comandos do Makefile:
+   ```bash
+   make                          # só compila
+   make gerar                    # gera os arquivos de 50000, 100000, 200000 e 400000 contatos
+   make gerar TAMANHOS="1000"    # gera um arquivo com o tamanho que quiser
+   make limpar                   # apaga a pasta bin
+   ```
+
+   Sem o `make`, compile manualmente. O comando precisa pegar os arquivos de todos os pacotes, por isso muda de um sistema para o outro:
 
    Linux ou macOS:
    ```bash
@@ -69,7 +86,7 @@ Linhas fora desse formato são ignoradas. Não pode haver dois contatos com o me
 
 4. Execute o programa (igual nos três casos):
    ```bash
-   java -cp bin dominio.Main
+   java -cp bin app.Main
    ```
 
    No Windows, se os acentos aparecerem trocados na tela, rode `chcp 65001` antes de executar.
@@ -77,7 +94,7 @@ Linhas fora desse formato são ignoradas. Não pode haver dois contatos com o me
 5. O programa pergunta se a lista deve ser ordenada e mostra o menu com as opções de carregar o arquivo, adicionar, pesquisar, remover, alterar e sair.
 
 ### Rodando pelo VS Code
-Abra a pasta `colecoes` (e não a pasta raiz do repositório), tenha o **Extension Pack for Java** instalado e clique em **Run** acima do `main` da classe `dominio/Main.java`.
+Abra a pasta `colecoes` (e não a pasta raiz do repositório), tenha o **Extension Pack for Java** instalado e clique em **Run** acima do `main` da classe `app/Main.java`.
 
 ## 📊 Como refazer os testes de desempenho
 Os arquivos maiores usados na Seção 3 do relatório são criados pelo gerador. A partir da pasta `colecoes`:

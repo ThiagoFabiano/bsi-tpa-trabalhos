@@ -77,12 +77,10 @@ public class ListaEncadeada<T> implements IColecao<T> {
         while (atual != null){
             int comp = this.comparador.compare(atual.getValor(), valor);
 
-            // Elemento encontrado
             if (comp == 0) {
                 return atual.getValor();
             }
 
-            // Se a lista for ordenada e o elemento atual for maior que o procurado temos a certeza de que ele não está adiante.
             if (this.ehOrdenada && comp > 0){
                 return null;
             }
@@ -99,8 +97,6 @@ public class ListaEncadeada<T> implements IColecao<T> {
         return remover(valor, this.comparador);
     }
 
-    // Remove usando outro criterio de comparacao. Serve para quem usa a lista
-    // poder achar o elemento exato quando a lista esta ordenada por outro campo.
     public boolean remover(T valor, Comparator<T> criterio) {
         if (valor == null || this.prim == null){
             return false;
@@ -113,17 +109,13 @@ public class ListaEncadeada<T> implements IColecao<T> {
             int comp = criterio.compare(atual.getValor(), valor);
 
             if(comp == 0){
-                // Caso 1: O elemento a ser removido é o primeiro da lista
                 if (ant == null){
                     this.prim = atual.getProx();
-                    // Se a lista só tinha 1 elemento, o ult também deve virar null
                     if (this.prim == null){
                         this.ult = null;
                     }
                 } else{
-                    // Caso 2: O elemento está no meio ou no fim
                     ant.setProx(atual.getProx());
-                    // Se removeu o último, atualiza o ponteiro 'ult' para o anterior
                     if (atual == this.ult){
                         this.ult = ant;
                     }

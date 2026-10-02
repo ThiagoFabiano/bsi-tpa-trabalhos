@@ -1,4 +1,4 @@
-package dominio;
+package model;
 import java.util.Comparator;
 
 public class ComparatorContatoPorTelefone implements Comparator<Contato> {

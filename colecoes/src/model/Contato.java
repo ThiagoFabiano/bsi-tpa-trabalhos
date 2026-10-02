@@ -1,4 +1,4 @@
-package dominio;
+package model;
 
 public class Contato {
     private String nome;
@@ -25,7 +25,6 @@ public class Contato {
         this.telefone = telefone;
     }
 
-    // Sobrescrita exigida: deve retornar nome - telefone
     @Override
     public String toString() {
         return this.nome + " - " + this.telefone;
