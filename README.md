@@ -15,6 +15,7 @@ O código-fonte está em `colecoes/src`, organizado no padrão MVC, com as bibli
 
 * **`colecao`**: interface `IColecao.java`, que define os métodos obrigatórios das estruturas.
 * **`listaencadeada`**: biblioteca de lista encadeada genérica (`ListaEncadeada.java` e `No.java`).
+* **`arvorebinaria`**: biblioteca de árvore binária de busca genérica. `ArvoreBinaria.java` especializa a `ArvoreBinariaBase.java` disponibilizada pelo professor; `No.java` é o nó da árvore.
 * **`model`**: classe `Contato.java` e os comparadores `ComparatorContatoPorNome.java` e `ComparatorContatoPorTelefone.java`.
 * **`view`**: `ContatoView.java`, responsável por toda a interação com o usuário no terminal (menus, leitura e mensagens).
 * **`controller`**: `ContatoController.java`, que recebe a opção escolhida na view, chama o service e manda a view exibir o resultado.
