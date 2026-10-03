@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import model.Contato;
 import service.ContatoService;
@@ -39,18 +40,18 @@ public class ContatoController {
             view.mostrar("Os dados do arquivo já foram carregados!");
             return;
         }
-        
-        // Pede o caminho do arquivo para facilitar o teste dos 8 arquivos da Etapa C
-        String caminhoArquivo = view.lerTexto("Digite o caminho do arquivo (ex: ordenado_10000.txt): ").trim();
-        
-        if(caminhoArquivo.isEmpty()){
+
+        String nomeInformado = view.lerTexto("Digite o nome do arquivo (ex: balanceado_50000.txt): ").trim();
+
+        if (nomeInformado.isEmpty()) {
             view.mostrar("Caminho inválido.");
             return;
         }
 
-        view.mostrarSemQuebra("Lendo o arquivo '" + caminhoArquivo + "'... ");
+        File arquivo = resolverArquivo(nomeInformado);
+        view.mostrarSemQuebra("Lendo o arquivo '" + arquivo.getAbsolutePath() + "'... ");
         try {
-            long nanos = service.carregarArquivo(caminhoArquivo);
+            long nanos = service.carregarArquivo(arquivo.getPath());
             view.mostrar("\nArquivo lido e estruturas montadas!");
             view.mostrarTempo("Tempo gasto", nanos);
             view.mostrar("Tamanho Estrutura Nome: " + service.quantidadeNome());
@@ -58,6 +59,21 @@ public class ContatoController {
         } catch (IOException e) {
             view.mostrar("\nErro ao ler o arquivo: " + e.getMessage());
         }
+    }
+
+    // Procura o arquivo como foi digitado e, se não achar, nas pastas "entradas" e "../entradas".
+    private File resolverArquivo(String nome) {
+        File direto = new File(nome);
+        if (direto.isFile()) {
+            return direto;
+        }
+        for (String pasta : new String[] { "entradas", "../entradas" }) {
+            File candidato = new File(pasta, nome);
+            if (candidato.isFile()) {
+                return candidato;
+            }
+        }
+        return direto; // não achou: o erro mostrará o caminho que foi tentado
     }
 
     private void adicionarContato() {
