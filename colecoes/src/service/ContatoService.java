@@ -5,8 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.function.Supplier;
 import colecao.IColecao;
-import listaencadeada.ListaEncadeada;
-import model.ComparatorContatoPorTelefone;
 import model.Contato;
 
 public class ContatoService {
@@ -59,10 +57,17 @@ public class ContatoService {
     }
 
     public Medicao<Boolean> removerPorTelefone(String telefone) {
-        Contato chave = new Contato("", telefone);
-        Medicao<Boolean> remocao = medir(() -> colecaoTelefone.remover(chave));
+        Contato chaveTelefone = new Contato("", telefone);
+        Contato contatoASerRemovido = colecaoTelefone.pesquisar(chaveTelefone);
+
+        if (contatoASerRemovido == null) {
+            return new Medicao<>(false, 0);
+        }
+
+        Medicao<Boolean> remocao = medir(() -> colecaoTelefone.remover(chaveTelefone));
+
         if (remocao.resultado()) {
-            removerDaColecaoNome(chave);
+            removerDaColecaoNome(contatoASerRemovido); 
         }
         return remocao;
     }
@@ -72,9 +77,12 @@ public class ContatoService {
         if (dono != null && dono != atual) {
             return false;
         }
-        Contato chaveAntiga = new Contato("", atual.getTelefone());
-        colecaoTelefone.remover(chaveAntiga);
-        removerDaColecaoNome(chaveAntiga);
+
+        // Remove das duas coleções usando o objeto atual que possui Nome e Telefone reais
+        colecaoTelefone.remover(atual);
+        removerDaColecaoNome(atual);
+
+        // Insere o novo contato
         inserir(new Contato(novoNome, novoTelefone));
         return true;
     }
@@ -96,8 +104,11 @@ public class ContatoService {
         colecaoTelefone.adicionar(contato);
     }
 
-    private void removerDaColecaoNome(Contato chave) {
-        ((ListaEncadeada<Contato>) colecaoNome).remover(chave, new ComparatorContatoPorTelefone());
+    // este mesmo objeto. Evita apagar outro contato que tenha o mesmo nome.
+    private void removerDaColecaoNome(Contato contato) {
+        if (colecaoNome.pesquisar(contato) == contato) {
+            colecaoNome.remover(contato);
+        }
     }
 
     private <T> Medicao<T> medir(Supplier<T> operacao) {

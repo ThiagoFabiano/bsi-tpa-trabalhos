@@ -52,7 +52,25 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
     @Override
     public T pesquisar(T valor) {
-        throw new UnsupportedOperationException("pesquisar ainda não implementado");
+        if (valor == null) {
+            return null;
+        }
+        
+        No<T> atual = this.raiz;
+        
+        while (atual != null) {
+            int comp = this.comparador.compare(valor, atual.getValor());
+            
+            if (comp == 0) {
+                return atual.getValor(); // Encontrou o elemento
+            } else if (comp < 0) {
+                atual = atual.getEsq(); // Busca na subárvore esquerda
+            } else {
+                atual = atual.getDir(); // Busca na subárvore direita
+            }
+        }
+        
+        return null; // Não encontrou
     }
 
     @Override
@@ -105,7 +123,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
     @Override
     public int quantidadeNos() {
-        throw new UnsupportedOperationException("quantidadeNos ainda não implementado");
+        return this.quantidade; // Retorna a variável já gerenciada pela classe
     }
 
     @Override

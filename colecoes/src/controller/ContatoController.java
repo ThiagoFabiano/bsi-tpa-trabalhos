@@ -8,8 +8,6 @@ import view.ContatoView;
 
 public class ContatoController {
 
-    private static final String ARQUIVO_ENTRADA = "entradas/entrada.txt";
-
     private final ContatoService service;
     private final ContatoView view;
 
@@ -41,13 +39,22 @@ public class ContatoController {
             view.mostrar("Os dados do arquivo já foram carregados!");
             return;
         }
-        view.mostrarSemQuebra("Lendo o arquivo 'entrada.txt'... ");
+        
+        // Pede o caminho do arquivo para facilitar o teste dos 8 arquivos da Etapa C
+        String caminhoArquivo = view.lerTexto("Digite o caminho do arquivo (ex: ordenado_10000.txt): ").trim();
+        
+        if(caminhoArquivo.isEmpty()){
+            view.mostrar("Caminho inválido.");
+            return;
+        }
+
+        view.mostrarSemQuebra("Lendo o arquivo '" + caminhoArquivo + "'... ");
         try {
-            long nanos = service.carregarArquivo(ARQUIVO_ENTRADA);
-            view.mostrar("\nArquivo lido e listas montadas!");
+            long nanos = service.carregarArquivo(caminhoArquivo);
+            view.mostrar("\nArquivo lido e estruturas montadas!");
             view.mostrarTempo("Tempo gasto", nanos);
-            view.mostrar("Tamanho Lista Nome: " + service.quantidadeNome());
-            view.mostrar("Tamanho Lista Telefone: " + service.quantidadeTelefone());
+            view.mostrar("Tamanho Estrutura Nome: " + service.quantidadeNome());
+            view.mostrar("Tamanho Estrutura Telefone: " + service.quantidadeTelefone());
         } catch (IOException e) {
             view.mostrar("\nErro ao ler o arquivo: " + e.getMessage());
         }
@@ -87,7 +94,7 @@ public class ContatoController {
     }
 
     private void alterarContato() {
-        String nome = view.lerTexto("Digite o nome do contato a alterar: ");
+        String nome = view.lerTexto("Digite o nome do contato a alterar: ").trim();
         Contato atual = service.pesquisarPorNome(nome).resultado();
         if (atual == null) {
             view.mostrar("Contato não existe.");
@@ -107,6 +114,6 @@ public class ContatoController {
 
     private void sair() {
         view.mostrar("Encerrando programa...");
-        view.mostrar("Quantidade total de contatos: " + service.quantidadeNome());
+        view.mostrar("Quantidade total de contatos: " + service.quantidadeTelefone());
     }
 }

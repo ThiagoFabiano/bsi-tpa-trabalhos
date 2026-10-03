@@ -10,9 +10,14 @@ public class ContatoView {
         this.scanner = new Scanner(System.in);
     }
 
-    public boolean perguntarSeOrdenada() {
-        System.out.println("Deseja criar as listas ordenadas? (1 - Sim / 2 - Não)");
-        return lerNumero() == 1;
+    // Método alterado para a Etapa C: App com 3 opções
+    public int escolherEstruturaDados() {
+        System.out.println("Escolha a estrutura de dados para o sistema:");
+        System.out.println("1 - Lista Não Ordenada");
+        System.out.println("2 - Lista Ordenada");
+        System.out.println("3 - Árvore Binária");
+        System.out.print("Opção: ");
+        return lerNumero();
     }
 
     public int mostrarMenu() {
