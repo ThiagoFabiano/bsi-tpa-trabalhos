@@ -1,10 +1,12 @@
 package service;
 
+import colecao.IColecao;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
-import colecao.IColecao;
 import model.Contato;
 
 public class ContatoService {
@@ -104,10 +106,19 @@ public class ContatoService {
         colecaoTelefone.adicionar(contato);
     }
 
-    // este mesmo objeto. Evita apagar outro contato que tenha o mesmo nome.
     private void removerDaColecaoNome(Contato contato) {
-        if (colecaoNome.pesquisar(contato) == contato) {
+        List<Contato> mesmoNome = new ArrayList<>();
+        Contato encontrado = colecaoNome.pesquisar(contato);
+        while (encontrado != null && encontrado != contato) {
+            colecaoNome.remover(encontrado);
+            mesmoNome.add(encontrado);
+            encontrado = colecaoNome.pesquisar(contato);
+        }
+        if (encontrado == contato) {
             colecaoNome.remover(contato);
+        }
+        for (Contato outro : mesmoNome) {
+            colecaoNome.adicionar(outro);
         }
     }
 
