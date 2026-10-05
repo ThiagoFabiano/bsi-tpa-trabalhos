@@ -6,21 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class GeradorArquivosBalanceados {
-
-    private static final String[] NOMES = {
-        "Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel",
-        "Helena", "Igor", "Juliana", "Kleber", "Larissa", "Marcos", "Natalia",
-        "Otavio", "Paula", "Rafael", "Sabrina", "Thiago", "Vanessa", "William", "Yasmin"
-    };
-
-    private static final String[] SOBRENOMES = {
-        "Silva", "Souza", "Oliveira", "Santos", "Pereira", "Costa", "Almeida",
-        "Rodrigues", "Ferreira", "Gomes", "Martins", "Barbosa", "Ribeiro",
-        "Carvalho", "Lima", "Araujo", "Moreira", "Nunes", "Teixeira", "Cardoso"
-    };
 
     private static final int[] TAMANHOS_PADRAO = {50000, 100000, 200000, 400000};
     private static final String PASTA_SAIDA = "entradas";
@@ -45,7 +32,7 @@ public class GeradorArquivosBalanceados {
     }
 
     private static void gerarArquivo(File arquivo, int quantidade) throws IOException {
-        Random sorteio = new Random();
+        GeradorNomes nomes = new GeradorNomes();
         List<Long> telefonesBalanceados = new ArrayList<>(quantidade);
         
         profundidadeMax = -1;
@@ -54,8 +41,7 @@ public class GeradorArquivosBalanceados {
 
         try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivo))) {
             for (Long telefone : telefonesBalanceados) {
-                String nome = NOMES[sorteio.nextInt(NOMES.length)]
-                        + " " + SOBRENOMES[sorteio.nextInt(SOBRENOMES.length)];
+                String nome = nomes.proximo();
                 
                 escritor.write(nome + ";" + telefone);
                 escritor.newLine();
@@ -63,7 +49,7 @@ public class GeradorArquivosBalanceados {
         }
     }
 
-    private static void dividirEConquistar(int inicio, int fim, List lista, int profundidade) {
+    private static void dividirEConquistar(int inicio, int fim, List<Long> lista, int profundidade) {
         if (inicio <= fim) {
             int meio = (inicio + fim) / 2;
             long telefone = 27900000000L + meio;

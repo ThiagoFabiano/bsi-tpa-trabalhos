@@ -4,21 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
 
 public class GeradorArquivosOrdenados {
-
-    private static final String[] NOMES = {
-        "Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel",
-        "Helena", "Igor", "Juliana", "Kleber", "Larissa", "Marcos", "Natalia",
-        "Otavio", "Paula", "Rafael", "Sabrina", "Thiago", "Vanessa", "William", "Yasmin"
-    };
-
-    private static final String[] SOBRENOMES = {
-        "Silva", "Souza", "Oliveira", "Santos", "Pereira", "Costa", "Almeida",
-        "Rodrigues", "Ferreira", "Gomes", "Martins", "Barbosa", "Ribeiro",
-        "Carvalho", "Lima", "Araujo", "Moreira", "Nunes", "Teixeira", "Cardoso"
-    };
 
     private static final int[] TAMANHOS_PADRAO = {50000, 100000, 200000, 400000};
     private static final String PASTA_SAIDA = "entradas";
@@ -33,7 +20,9 @@ public class GeradorArquivosOrdenados {
             File arquivo = new File(pasta, "ordenado_" + tamanho + ".txt");
             try {
                 gerarArquivo(arquivo, tamanho);
-                System.out.println("Gerado: " + arquivo.getAbsolutePath() + " (" + tamanho + " contatos ordenados)");
+                // O último telefone do arquivo é a folha no fim da árvore degenerada
+                long telefonePiorCaso = 27900000000L + tamanho - 1;
+                System.out.println("Gerado: " + arquivo.getName() + " | Telefone de Pior Caso: " + telefonePiorCaso);
             } catch (IOException e) {
                 System.out.println("ERRO ao gerar " + arquivo.getName() + ": " + e.getMessage());
             }
@@ -41,12 +30,11 @@ public class GeradorArquivosOrdenados {
     }
 
     private static void gerarArquivo(File arquivo, int quantidade) throws IOException {
-        Random sorteio = new Random();
+        GeradorNomes nomes = new GeradorNomes();
         
         try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivo))) {
             for (int i = 0; i < quantidade; i++) {
-                String nome = NOMES[sorteio.nextInt(NOMES.length)]
-                        + " " + SOBRENOMES[sorteio.nextInt(SOBRENOMES.length)];
+                String nome = nomes.proximo();
                 
                 // Telefones gerados sequencialmente, SEM EMBARALHAR!
                 long telefone = 27900000000L + i;
