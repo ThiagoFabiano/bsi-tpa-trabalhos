@@ -71,6 +71,29 @@ public class ArvoreBinariaAVL<T> extends ArvoreBinaria<T> {
         return novoNoPai;
     }
 
+    private No<T> balancear(No<T> no){
+
+        atualizarAlturaNo(no);
+
+        int fb = fatorBalanceamento(no);
+
+        if(fb > 1){
+            if(fatorBalanceamento(no.getEsq()) < 0){
+                no.setEsq(rotacaoEsquerda(no.getEsq()));
+            }
+            return rotacaoDireita(no);
+        }
+
+        if(fb < -1){
+            if(fatorBalanceamento(no.getDir()) > 0){
+                no.setDir(rotacaoDireita(no.getDir()));
+            }
+            return rotacaoEsquerda(no);
+        }
+
+        return no;
+    }
+
 }
 
   
