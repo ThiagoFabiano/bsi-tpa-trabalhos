@@ -4,11 +4,13 @@ public class No<T> {
     private T valor;
     private No<T> esq;
     private No<T> dir;
+    private int altura;
 
     public No(T valor) {
         this.valor = valor;
         this.esq = null;
         this.dir = null;
+        this.altura = 0;
     }
 
     public T getValor() {
@@ -33,5 +35,13 @@ public class No<T> {
 
     public void setDir(No<T> dir) {
         this.dir = dir;
+    }
+
+    public int getAltura(){
+        return this.altura;
+    }
+
+    public void setAltura(int altura){
+        this.altura = altura;
     }
 }
