@@ -1,6 +1,7 @@
 package app;
 
-import arvorebinaria.ArvoreBinaria; 
+import arvorebinaria.ArvoreBinaria;
+import arvorebinaria.ArvoreAVL;
 import colecao.IColecao;
 import controller.ContatoController;
 import listaencadeada.ListaEncadeada;
@@ -14,7 +15,7 @@ public class Main {
     public static void main(String[] args) {
         ContatoView view = new ContatoView();
         
-        // Recebe a opcao 1, 2 ou 3 da View atualizada
+        // Recebe a opcao 1, 2, 3 ou 4 da View atualizada
         int opcaoEstrutura = view.escolherEstruturaDados();
 
         IColecao<Contato> colecaoNome = null;
@@ -30,6 +31,9 @@ public class Main {
         } else if (opcaoEstrutura == 3) {
             colecaoNome = new ArvoreBinaria<>(new ComparatorContatoPorNome());
             colecaoTelefone = new ArvoreBinaria<>(new ComparatorContatoPorTelefone());
+        } else if (opcaoEstrutura == 4) {
+            colecaoNome = new ArvoreAVL<>(new ComparatorContatoPorNome());
+            colecaoTelefone = new ArvoreAVL<>(new ComparatorContatoPorTelefone());
         } else {
             view.mostrar("Opção inválida! Encerrando o programa.");
             view.fechar();

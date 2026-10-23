@@ -16,6 +16,7 @@ public class ContatoView {
         System.out.println("1 - Lista Não Ordenada");
         System.out.println("2 - Lista Ordenada");
         System.out.println("3 - Árvore Binária");
+        System.out.println("4 - Árvore AVL");
         System.out.print("Opção: ");
         return lerNumero();
     }
