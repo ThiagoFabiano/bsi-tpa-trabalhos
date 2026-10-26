@@ -1,9 +1,9 @@
 # Trabalho 2 - Árvores Binárias e Análise de Complexidade
 
 ## 📌 Sobre o Projeto
-Este projeto foi desenvolvido para a disciplina de Técnicas de Programação Avançadas. No Trabalho 1 implementamos uma biblioteca própria de Lista Encadeada Genérica em Java (ordenada e não ordenada). No Trabalho 2 acrescentamos uma biblioteca de Árvore Binária de Busca genérica e analisamos, de forma matemática e empírica, a complexidade dos seus métodos em árvores perfeitamente balanceadas e em árvores degeneradas.
+Este projeto foi desenvolvido para a disciplina de Técnicas de Programação Avançadas. No Trabalho 1 implementamos uma biblioteca própria de Lista Encadeada Genérica em Java (ordenada e não ordenada). No Trabalho 2 acrescentamos uma biblioteca de Árvore Binária de Busca genérica e analisamos, de forma matemática e empírica, a complexidade dos seus métodos em árvores perfeitamente balanceadas e em árvores degeneradas. Depois acrescentamos a Árvore AVL, que se rebalanceia a cada inserção e remoção, e comparamos o seu desempenho com o da árvore binária comum.
 
-Para testar as bibliotecas, há um programa interativo que gerencia contatos telefônicos carregados a partir de um arquivo texto, permitindo inserções, buscas e remoções. Ao iniciar, o usuário escolhe se os contatos serão guardados em listas (ordenadas ou não) ou em árvores binárias.
+Para testar as bibliotecas, há um programa interativo que gerencia contatos telefônicos carregados a partir de um arquivo texto, permitindo inserções, buscas e remoções. Ao iniciar, o usuário escolhe se os contatos serão guardados em listas (ordenadas ou não), em árvores binárias ou em árvores AVL.
 
 ## 👥 Componentes do Grupo
 * Daniel Pinheiro
@@ -15,7 +15,7 @@ O código-fonte está em `colecoes/src`, organizado no padrão MVC, com as bibli
 
 * **`colecao`**: interface `IColecao.java`, que define os métodos obrigatórios das estruturas.
 * **`listaencadeada`**: biblioteca de lista encadeada genérica (`ListaEncadeada.java` e `No.java`), do Trabalho 1.
-* **`arvorebinaria`**: biblioteca de árvore binária de busca genérica. `ArvoreBinaria.java` especializa a `ArvoreBinariaBase.java` disponibilizada pelo professor; `No.java` é o nó da árvore.
+* **`arvorebinaria`**: biblioteca de árvore binária de busca genérica. `ArvoreBinaria.java` especializa a `ArvoreBinariaBase.java` disponibilizada pelo professor; `ArvoreAVL.java` herda de `ArvoreBinaria`, sobrescreve `adicionar` e `remover` e rebalanceia a árvore com rotações; `No.java` é o nó da árvore (guarda também a altura, usada pela AVL).
 * **`model`**: classe `Contato.java` e os comparadores `ComparatorContatoPorNome.java` e `ComparatorContatoPorTelefone.java`.
 * **`view`**: `ContatoView.java`, responsável por toda a interação com o usuário no terminal (menus, leitura e mensagens).
 * **`controller`**: `ContatoController.java`, que recebe a opção escolhida na view, chama o service e manda a view exibir o resultado.
@@ -100,7 +100,7 @@ Linhas fora desse formato são ignoradas. Não pode haver dois contatos com o me
 
    No Windows, se os acentos aparecerem trocados na tela, rode `chcp 65001` antes de executar.
 
-5. O programa pergunta qual estrutura usar (1 - lista não ordenada, 2 - lista ordenada, 3 - árvore binária) e mostra o menu com as opções de carregar arquivo, adicionar, pesquisar por nome, pesquisar por telefone, remover, alterar e sair. Na opção 1, informe o nome do arquivo (por exemplo `balanceado_50000.txt`); ele é procurado na pasta atual e em `entradas/`.
+5. O programa pergunta qual estrutura usar (1 - lista não ordenada, 2 - lista ordenada, 3 - árvore binária, 4 - árvore AVL) e mostra o menu com as opções de carregar arquivo, adicionar, pesquisar por nome, pesquisar por telefone, remover, alterar e sair. Na opção 1, informe o nome do arquivo (por exemplo `balanceado_50000.txt`); ele é procurado na pasta atual e em `entradas/`.
 
 ### Rodando pelo VS Code
 Abra a pasta `colecoes` (e não a pasta raiz do repositório), tenha o **Extension Pack for Java** instalado e clique em **Run** acima do `main` da classe `app/Main.java`.
@@ -118,7 +118,7 @@ Sem o `make`: `java -cp bin util.GeradorArquivosOrdenados` e `java -cp bin util.
 Cada gerador mostra, para cada arquivo, o **telefone de pior caso**, isto é, a folha mais distante da raiz na árvore indexada por telefone. No arquivo ordenado é o último telefone; no balanceado é uma folha do último nível.
 
 Para cada arquivo:
-1. rode o programa e escolha a opção 3 (árvore binária);
+1. rode o programa e escolha a opção 3 (árvore binária) ou a opção 4 (árvore AVL; nos testes do relatório, só com os arquivos ordenados);
 2. na opção 1, informe o nome do arquivo e anote o tempo de montagem;
 3. na opção 4, pesquise o telefone de pior caso e anote o tempo e o nome exibido;
 4. na opção 3, pesquise esse nome e anote o tempo;
@@ -126,4 +126,4 @@ Para cada arquivo:
 
 > Atenção: a montagem da árvore a partir dos arquivos **ordenados** demora, porque a árvore fica
 > degenerada e cada inserção percorre todos os nós já inseridos (O(n²)). Com 200.000 contatos leva
-> cerca de 20 minutos e com 400.000 cerca de 50 minutos. Com os arquivos **balanceados** leva menos de um segundo.
+> cerca de 10 minutos e com 400.000 cerca de 50 minutos. Com os arquivos **balanceados** leva menos de um segundo. Na árvore AVL, mesmo os arquivos ordenados levam menos de um segundo, porque ela nunca fica degenerada.
